@@ -1,0 +1,205 @@
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>京东轮播图</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .all{
+            position: relative;
+            top: 50px;
+            width: 600px;
+            height: 500px;
+        }
+        #banner {
+            position: relative;
+            top: 0px;
+            width: 590px;
+            height: 470px;
+            margin: 0 auto;
+        }
+        .img {
+            display: none;
+            width: 590px;
+            height: 470px;
+            position: absolute;
+        }
+        .l-tab {
+            position: relative;
+            top: -250px;
+            left: 5px;
+            width: 25px;
+            height: 35px;
+            line-height: 35px;
+            font-size: 20px;
+            margin-top: -20px;
+            background-color: rgba(0, 0, 0, .15);
+            border-top-right-radius: 18px;
+            border-bottom-right-radius: 18px;
+        }
+        .r-tab {
+            position: relative;
+            top: -270px;
+            left: 570px;
+            width: 25px;
+            height: 35px;
+            line-height: 35px;
+            font-size: 20px;
+            margin-top: -20px;
+            background-color: rgba(0, 0, 0, .15);
+            border-top-left-radius: 18px;
+            border-bottom-left-radius: 18px;
+        }
+        #left {
+            position: relative;
+            left: 1px;
+            display: block;
+            width: 100%;
+            height: 100%;
+            color: rgba(255, 255, 255, .8);
+        }
+        #right {
+            position: relative;
+            left: 8px;
+            display: block;
+            width: 100%;
+            height: 100%;
+            color: rgba(255, 255, 255, .8);
+        }
+        #button {
+            position: relative;
+            top: -80px;
+            left: 80px;
+            height: 15px;
+        }   
+        .bt {
+            opacity: 0.8;
+            position: relative;
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            background-color: rgba(255, 255, 255, .4);
+            margin-right: 4px;
+        } 
+        .nowBt {
+            width: 9px;
+            height: 9px;
+            top: 2px;
+            background-color: rgba(255, 255, 255, 1);
+            border: 3px solid rgba(0, 0, 0, .5);
+        }
+        .nowTab {
+            background-color: rgba(0, 0, 0, .5);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="all">
+        <div id="banner">
+            <img class="img" style="display: block;" src="imgs/1.jpg" />
+            <img class="img" src="imgs/2.jpg" />
+            <img class="img" src="imgs/3.jpg" />
+            <img class="img" src="imgs/4.jpg" />
+            <img class="img" src="imgs/5.jpg" />
+            <img class="img" src="imgs/6.jpg" />
+            <img class="img" src="imgs/7.jpg" />
+            <img class="img" src="imgs/8.jpg" />
+        </div>
+        <div id="button">
+            <div class="bt nowBt"></div>
+            <div class="bt"></div>
+            <div class="bt"></div>
+            <div class="bt"></div>
+            <div class="bt"></div>
+            <div class="bt"></div>
+            <div class="bt"></div>
+            <div class="bt"></div>
+        </div>
+        <div id="tab">
+            <div class="l-tab">
+                <div id="left">&lt;</div>
+            </div>
+            <div class="r-tab">
+                <div id="right">&gt;</div>
+            </div>
+        </div>
+    </div>
+    <script src="jquery.js"></script>
+    <script>
+       $("document").ready(function() {
+            var index = 0; //下标
+            var stop = false; //转换
+            var $li = $("#banner").children(".img"); //轮播图片
+            var $page = $("#button").children(".bt"); //图片按钮
+            var $tabs = $("#tab").children(".l-tab" & ".r-tab"); //左右按钮
+            //图片与按钮效果
+            $page.hover(function() {
+                index = $(this).index();
+                $(this).addClass("nowBt").stop(true, true).siblings().removeClass("nowBt");
+                $li.eq(index).stop(true, true).fadeIn(800).siblings().fadeOut(800);
+            });
+            //浮上左右边按钮
+            $tabs.hover(function() {
+                $(this).addClass("nowTab");
+            }, function() {
+                $(this).removeClass("nowTab");
+            });
+            //点击左边按钮
+            $("#left").click(function() {
+                clearInterval(timer);
+                index--;
+                if (index < 0) {
+                    index = $li.length - 1;
+                }
+                $li.eq(index).stop(true, true).fadeIn().siblings().fadeOut();
+                $page.eq(index).addClass("nowBt").stop(true, true).siblings().removeClass("nowBt");
+            });
+            //点击右边按钮
+            $("#right").click(function() {
+                clearInterval(timer);
+                index++;
+                if (index > $li.length - 1) {
+                    index = 0;
+                }
+                $li.eq(index).stop(true, true).fadeIn().siblings().fadeOut();
+                $page.eq(index).addClass("nowBt").stop(true, true).siblings().removeClass("nowBt");
+            });
+            //自动轮播图片
+            var timer = setInterval(function() {
+                if (stop) return;
+                index++;
+                if (index > $li.length - 1) {
+                    index = 0;
+                }
+                $li.eq(index).stop(true, true).fadeIn().siblings().fadeOut();
+                $page.eq(index).addClass("nowBt").stop(true, true).siblings().removeClass("nowBt");
+            }, 3000);
+
+            $("#banner").mousemove(function() {
+                clearInterval(timer);
+            }).mouseout(function() {
+                timer = setInterval(function() {
+                    if (stop) return;
+                    index++;
+                    if (index > $li.length - 1) {
+                        index = 0;
+                    }
+                    $li.eq(index).stop(true, true).fadeIn().siblings().fadeOut();
+                    $page.eq(index).addClass("nowBt").stop(true, true).siblings().removeClass("nowBt");
+                }, 3000);
+            });
+        });
+    </script>
+
+</body>
+
+</html>
